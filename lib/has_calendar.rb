@@ -9,7 +9,7 @@ module SimplesIdeias
           :events => nil,
           :field => :created_at,
           :header_format => :day_of_week,
-          :caption_format => "%A %Y",
+          :caption_format => "%B %Y",
           :id => "calendar"
         }.merge(options)
         
