@@ -9,12 +9,14 @@ module SimplesIdeias
           :events => nil,
           :field => :created_at,
           :header_format => :day_of_week,
-          :caption_format => :default,
+          :caption_format => "%A %Y",
           :id => "calendar"
         }.merge(options)
         
         # If provided, group events by the day of their occuring
         @records = group_events(options[:events], options[:field])
+        
+        @records.each { |key, value| logger.debug("#{key}: #{Date.jd(key)} => #{value.size} events") }
         
         # Get the list of all days which we will present in the calendar
         days = days_for_calendar
@@ -60,13 +62,14 @@ module SimplesIdeias
         events_html = ""
         
         if block_given? && !day.blank?
-          events_html = @records ? capture(day, @records[day.mjd], &block) : capture(day, &block)
+          events_html = @records ? capture(day, @records[day.jd], &block) : capture(day, &block)
         end
         
         unless day.blank?
           col_options[:class] << ' today' if Date.today == day
           col_options[:class] << ' weekend' if [0,6].include?(day.wday)
-          col_options[:class] << ' marked' if @options[:marked] = day
+          col_options[:class] << ' marked' if @options[:marked] == day
+          col_options[:class] << ' different_month' if day.month != @options[:month]
           col_options[:class] << ' events' unless events_html.blank?
         end
         
@@ -76,7 +79,7 @@ module SimplesIdeias
       end
       
       def group_events(events, field)
-        events.group_by { |event| event.send(field).to_date.mjd } if events
+        events.group_by { |event| event.send(field).to_date.jd } if events
       end
       
     end
