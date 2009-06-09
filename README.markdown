@@ -1,22 +1,18 @@
-ha\_calendar
+has\_calendar
 ============
 
 has\_calendar is a view helper that creates a calendar using a table. You can 
 easily add events with any content.
 
-This plugin relies on the `cal` command, available on *nix systems. Instead 
-of calculating dates, I parse the output.
+This plugin no longer requires the `cal` command and is therefore useable on 
+all systems ruby runs on. Furthermore the first-day-of-the-week problem is 
+gone as the plugin relies on ruby and is inheriting its settings.
 
-NOTE: Only on Mac OS X (Unix?) the first day of week is Sunday; Linux (tested
-on Ubuntu) uses the argument `-m`, starting on Monday.
-
-Want this to work on Windows systems? Make sure you have a command `cal` on 
-your PATH that returns exactly the *nix output (haven't tested though).
 
 Instalation
 -----------
 
-1) Install the plugin with `script/plugin install git://github.com/fnando/has_calendar.git`
+1) Install the plugin with `script/plugin install git://github.com/namxam/has_calendar.git`
 
 Usage
 -----
