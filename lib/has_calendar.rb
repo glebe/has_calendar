@@ -2,7 +2,7 @@ module SimplesIdeias
   module Calendar
     module ActionView
       def calendar(options={}, &block)
-        @options = options = {
+        @options = {
           :year => Date.today.year,
           :month => Date.today.month,
           :today => nil,
@@ -13,8 +13,12 @@ module SimplesIdeias
           :id => "calendar"
         }.merge(options)
 
+        # Allow parametre overides
+        @options[:month] = params[:month].to_i if params[:month]
+        @options[:year] = params[:year].to_i if params[:year]
+
         # If provided, group events by the day of their occuring, else set a blank array
-        @records = group_events(options[:events], options[:field]) || Array.new
+        @records = group_events(@options[:events], @options[:field]) || Array.new
 
         @records.each { |key, value| logger.debug("#{key}: #{Date.jd(key)} => #{value.size} events") }
 
@@ -22,12 +26,12 @@ module SimplesIdeias
         days = days_for_calendar
 
         # Building the calendar
-        contents = content_tag(:table, :id => options[:id], :class => 'monthly calendar') do
+        contents = content_tag(:table, :id => @options[:id], :class => 'monthly calendar') do
           rows = ""
           days.in_groups_of(7, "") do |week_days|
             rows << content_tag(:tr, week_days.inject("") { |cols, day| cols << html_for_day(day, &block) })
           end
-          table_caption.to_s + table_header + rows
+          table_header + rows + table_footer
         end
 
         # If a block is given, replace it by the calendar
@@ -38,7 +42,7 @@ module SimplesIdeias
       end
 
       def table_caption
-        content_tag(:caption, I18n.l(Date.civil(@options[:year], @options[:month]), :format => @options[:caption_format])) if @options[:caption_format]
+        content_tag(:div, I18n.l(Date.civil(@options[:year], @options[:month]), :format => @options[:caption_format])) if @options[:caption_format]
       end
 
       # Create the calendar table header consisting of seven th fields in a row
@@ -52,6 +56,18 @@ module SimplesIdeias
               classes << ' sunday' if i == 6
               content_tag(:th, l(first_day_of_week + i, :format => @options[:header_format]), :class => classes)
             end.to_s
+          end
+        end
+      end
+
+      def table_footer
+        content_tag(:tr, :class => 'footer') do
+          content_tag(:th, :colspan => 2, :class => 'previous_month') do
+            link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year)
+          end +
+          content_tag(:th, table_caption.to_s, :colspan => 3, :class => 'caption') +
+          content_tag(:th, :colspan => 2, :class => 'next_month') do
+            link_to('Next Month &raquo;', :month => next_month, :year => next_year)
           end
         end
       end
@@ -88,6 +104,30 @@ module SimplesIdeias
 
       def group_events(events, field)
         events.group_by { |event| event.send(field).to_date.jd } if events
+      end
+
+      def previous_month
+        previous_month = @options[:month] - 1
+        previous_month = 12 if previous_month < 1
+        previous_month
+      end
+
+      def next_month
+        next_month = @options[:month] + 1
+        next_month = 1 if next_month > 12
+        next_month
+      end
+
+      def previous_year
+        previous_year = @options[:year]
+        previous_year = previous_year - 1 if @options[:month] == 1
+        previous_year
+      end
+
+      def next_year
+        next_year = @options[:year]
+        next_year = next_year + 1 if @options[:month] == 12
+        next_year
       end
 
     end

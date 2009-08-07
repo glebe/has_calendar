@@ -74,6 +74,7 @@ You can use this CSS to start:
     border: 1px solid #555 !important;
     padding: 0px;
     border-spacing: 1px;
+    margin: 10px 0;
   }
 
   #calendar td,
@@ -118,6 +119,18 @@ You can use this CSS to start:
 
   #calendar .sunday {
     color: maroon !important;
+  }
+
+  #calendar .footer th {
+    height: auto;
+  }
+
+  #calendar .footer .caption {
+    text-align: center;
+  }
+
+  #calendar .footer .next_month {
+    text-align: right;
   }
 
 TO-DO
