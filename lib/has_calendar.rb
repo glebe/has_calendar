@@ -10,12 +10,15 @@ module SimplesIdeias
           :field => :created_at,
           :header_format => "%a",
           :caption_format => "%B %Y",
-          :id => "calendar"
+          :id => "calendar",
+          :allow_user_date_select => true
         }.merge(options)
 
         # Allow parametre overides
-        @options[:month] = params[:month].to_i if params[:month]
-        @options[:year] = params[:year].to_i if params[:year]
+        if @options[:allow_user_date_select]
+          @options[:month] = params[:month].to_i if params[:month]
+          @options[:year] = params[:year].to_i if params[:year]
+        end
 
         # If provided, group events by the day of their occuring, else set a blank array
         @records = group_events(@options[:events], @options[:field]) || Array.new
@@ -63,11 +66,11 @@ module SimplesIdeias
       def table_footer
         content_tag(:tr, :class => 'footer') do
           content_tag(:th, :colspan => 2, :class => 'previous_month') do
-            link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year)
+            link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year) if @options[:allow_user_date_select]
           end +
           content_tag(:th, table_caption.to_s, :colspan => 3, :class => 'caption') +
           content_tag(:th, :colspan => 2, :class => 'next_month') do
-            link_to('Next Month &raquo;', :month => next_month, :year => next_year)
+            link_to('Next Month &raquo;', :month => next_month, :year => next_year) if @options[:allow_user_date_select]
           end
         end
       end

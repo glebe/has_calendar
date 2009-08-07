@@ -17,6 +17,12 @@ Instalation
 Usage
 -----
 
+If you want a very simple calendar, then all you need to do is:
+
+    <%= calendar %>
+
+If you want to display a specific year and month, you can provide them to the options.
+
     <%= calendar :year => 2009, :month => 8 %>
 
 or, if you want to register some events:
@@ -64,6 +70,11 @@ Or on your locale file, if your application is internationalized.
 You can set the HTML id:
 
     <%= calendar :id => 'cal' %>
+
+The calendar has built in support for users to go to the previous or next month/year.
+If you want to disable this support, you can set allow_user_date_select to false:
+
+    <%= calendar :allow_user_date_select => false %>
 
 Formatting the calendar
 -----------------------
