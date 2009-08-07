@@ -67,7 +67,8 @@ To set formats do something like this:
 
 Or on your locale file, if your application is internationalized.
 
-You can set the HTML id:
+By default, calendars don't have ids set so multiple ones can be used on the page.
+If you need an id, you can set the HTML id by doing the following:
 
     <%= calendar :id => 'cal' %>
 
@@ -76,20 +77,25 @@ If you want to disable this support, you can set allow_user_date_select to false
 
     <%= calendar :allow_user_date_select => false %>
 
+The calendar has support for marking days that are important (deadlines for example).
+You can mark days by doing the following:
+
+    <%= calendar :marked => ["2009-08-07", "2009-09-20"] %>
+
 Formatting the calendar
 -----------------------
 
 You can use this CSS to start:
 
-    #calendar {
+    .calendar {
       border: 1px solid #555 !important;
       padding: 0px;
       border-spacing: 1px;
       margin: 10px 0;
     }
 
-    #calendar td,
-    #calendar th {
+    .calendar td,
+    .calendar th {
       color: #ccc;
       font-family: "Lucida Grande",arial,helvetica,sans-serif;
       font-size: 10px;
@@ -98,7 +104,7 @@ You can use this CSS to start:
       height: 50px;
     }
 
-    #calendar th {
+    .calendar th {
       border: 1px solid #ccc;
       border-bottom: 1px solid #555;
       border-right: 1px solid #555;
@@ -107,40 +113,44 @@ You can use this CSS to start:
       text-align: left;
     }
 
-    #calendar td {
+    .calendar td {
       background-color: #F0F0F0;
       border: 1px solid #ddd;
       color: #000;
       vertical-align: text-top;
     }
 
-    #calendar td.events {
+    .calendar td.events {
       background: #fff;
     }
 
-    #calendar td.today {
+    .calendar td.today {
       background: #ffc;
       color: #666;
     }
 
-    #calendar td.different_month {
+    .calendar td.different_month {
       background: #E0E0E0;
       color: #666;
     }
 
-    #calendar .sunday {
+    .calendar .sunday {
       color: maroon !important;
     }
 
-    #calendar .footer th {
+    .calendar .marked {
+      background-color: pink;
+    }
+
+    .calendar .footer th {
       height: auto;
     }
 
-    #calendar .footer .caption {
+    .calendar .footer .caption {
       text-align: center;
     }
 
-    #calendar .footer .next_month {
+    .calendar .footer .next_month {
       text-align: right;
     }
 
@@ -148,6 +158,10 @@ TO-DO
 -----
 
 - Write some specs as soon as possible!
+- Convert to a class, with a helper that class Calendar.new.to_html
+- With the new calendar class, remove the dependancy of as many Rails components as possible
+- With the new calender class, provide a cleaner way to add marked days/events (cal.add_event, cal.add_marked)
+- Allow notes to be attached to marked days
 
 Contributors
 ------------
