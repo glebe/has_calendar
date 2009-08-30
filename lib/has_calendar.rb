@@ -10,7 +10,10 @@ module HasCalendar
       :caption_format => "%B %Y",
       :id => nil,
       :allow_user_date_select => true,
-      :marked => Array.new
+      :marked => Array.new,
+      # start_week - 0 for Monday, -1 for Sunday.
+      :start_week => 0,
+      :place_footer => "bottom"
     }.merge(options)
 
     # Allow parametre overides
@@ -33,7 +36,11 @@ module HasCalendar
       days.in_groups_of(7, "") do |week_days|
         rows << content_tag(:tr, week_days.inject("") { |cols, day| cols << html_for_day(day, &block) })
       end
-      table_header + rows + table_footer
+      if @options[:place_footer] == "top"
+      	table_footer + table_header + rows 
+      elsif @options[:place_footer] == "bottom"
+        table_header + rows + table_footer
+      end
     end
 
     # If a block is given, replace it by the calendar
@@ -51,7 +58,7 @@ module HasCalendar
 
   def days_for_calendar
     base_day = Date.civil(@options[:year], @options[:month], 1)
-    (base_day.beginning_of_week..base_day.end_of_month.end_of_week).to_a
+    ((base_day.beginning_of_week + @options[:start_week])..(base_day.end_of_month.end_of_week + @options[:start_week])).to_a
   end
 
   def html_for_day(day, &block)
@@ -80,13 +87,18 @@ module HasCalendar
 
   # Create the calendar table header consisting of seven th fields in a row
   def table_header
-    first_day_of_week = Date.today.beginning_of_week
+    first_day_of_week = Date.today.beginning_of_week + (@options[:start_week])
     content_tag(:thead) do
       content_tag(:tr) do
         (0..6).collect do |i|
           classes = 'day_name'
-          classes << ' weekend' if [5,6].include?(i)
-          classes << ' sunday' if i == 6
+          if @options[:start_week] == 0
+            classes << ' weekend' if [5,6].include?(i)
+            classes << ' sunday' if i == 6
+          elsif @options[:start_week] == -1
+            classes << ' weekend' if [0,6].include?(i)
+            classes << ' sunday' if i == 0
+          end
           content_tag(:th, l(first_day_of_week + i, :format => @options[:header_format]), :class => classes)
         end.to_s
       end
@@ -94,7 +106,7 @@ module HasCalendar
   end
 
   def table_footer
-    content_tag(:tr, :class => 'footer') do
+    content_tag(:thead, :class => 'footer') do
       content_tag(:th, :colspan => 2, :class => 'previous_month') do
         link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year) if @options[:allow_user_date_select]
       end +

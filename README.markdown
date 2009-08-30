@@ -82,6 +82,18 @@ You can mark days by doing the following:
 
     <%= calendar :marked => ["2009-08-07", "2009-09-20"] %>
 
+An option, :start_week easily changes the week organization to Sun...Sat from the 
+default Mon..Sun (per the beginning_of_week call).  Values are  0 (start on Monday) 
+or -1 (start on Sunday), default is 0:  
+
+	<%= calendar :start_week => -1 %>
+
+For those who prefer the (prev|month|next) block, which is by default on the bottom, to be on
+the top of the calendar, use the :place_footer option (default is "bottom"):
+
+	<%= calendar :place_footer => "top" %>
+
+
 Formatting the calendar
 -----------------------
 
@@ -162,6 +174,7 @@ TO-DO
 - With the new calendar class, remove the dependancy of as many Rails components as possible
 - With the new calender class, provide a cleaner way to add marked days/events (cal.add_event, cal.add_marked)
 - Allow notes to be attached to marked days
+
 
 Contributors
 ------------
