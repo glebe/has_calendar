@@ -156,6 +156,7 @@ You can use this CSS to start:
 
     .calendar .footer th {
       height: auto;
+      width: auto;
     }
 
     .calendar .footer .caption {
