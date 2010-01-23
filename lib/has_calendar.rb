@@ -78,6 +78,7 @@ module HasCalendar
       col_options[:class] << ' marked' if @options[:marked].include?(day.to_s)
       col_options[:class] << ' different_month' if day.month != @options[:month]
       col_options[:class] << ' events' unless events_html.blank?
+      col_options[:'data-date'] = day.to_s(:db)
     end
 
     content_tag(:td, col_options) do
