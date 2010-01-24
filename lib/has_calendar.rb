@@ -108,12 +108,14 @@ module HasCalendar
 
   def table_footer
     content_tag(:thead, :class => 'footer') do
-      content_tag(:th, :colspan => 2, :class => 'previous_month') do
-        link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year) if @options[:allow_user_date_select]
-      end +
-      content_tag(:th, table_caption.to_s, :colspan => 3, :class => 'caption') +
-      content_tag(:th, :colspan => 2, :class => 'next_month') do
-        link_to('Next Month &raquo;', :month => next_month, :year => next_year) if @options[:allow_user_date_select]
+      content_tag(:tr) do
+        content_tag(:th, :colspan => 2, :class => 'previous_month') do
+          link_to('&laquo; Previous Month', :month => previous_month, :year => previous_year) if @options[:allow_user_date_select]
+        end +
+        content_tag(:th, table_caption.to_s, :colspan => 3, :class => 'caption') +
+        content_tag(:th, :colspan => 2, :class => 'next_month') do
+          link_to('Next Month &raquo;', :month => next_month, :year => next_year) if @options[:allow_user_date_select]
+        end
       end
     end
   end
