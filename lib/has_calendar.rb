@@ -53,7 +53,12 @@ module HasCalendar
   private
 
   def group_events(events, field)
-    events.group_by { |event| event.send(field).to_date.jd } if events
+    if events
+      field = event.send(field)
+      grouped_events = events.group_by { |event| field.to_date.jd if field}
+      grouped_events.delete(nil)
+      grouped_events
+    end
   end
 
   def days_for_calendar
